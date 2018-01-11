@@ -1,4 +1,4 @@
-package com.willme.topactivity;
+package com.willme.topactivity.service;
 
 import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
@@ -10,6 +10,12 @@ import android.os.Build;
 import android.provider.Settings;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
+
+import com.willme.topactivity.view.MainActivity;
+import com.willme.topactivity.tool.SPHelper;
+import com.willme.topactivity.tool.TasksWindow;
+import com.willme.topactivity.receiver.WatchingAccessibilityService;
+import com.willme.topactivity.receiver.NotificationActionReceiver;
 
 /**
  * Created by Wen on 5/3/16.

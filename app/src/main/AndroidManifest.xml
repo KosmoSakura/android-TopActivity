@@ -13,7 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".view.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask">
             <intent-filter>
@@ -26,16 +26,16 @@
         </activity>
 
         <activity
-            android:name=".AppShortcutsActivity"
+            android:name=".view.AppShortcutsActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:theme="@style/TransparentTheme" />
 
         <service
-            android:name=".WatchingService"
+            android:name=".receiver.WatchingService"
             android:enabled="@bool/use_watching_service" />
         <service
-            android:name=".WatchingAccessibilityService"
+            android:name=".receiver.WatchingAccessibilityService"
             android:description="@string/app_name"
             android:enabled="@bool/use_accessibility_service"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
@@ -48,7 +48,7 @@
                 android:resource="@xml/accessibility" />
         </service>
         <service
-            android:name=".QuickSettingTileService"
+            android:name=".service.QuickSettingTileService"
             android:enabled="@bool/qs_tile_service_availability"
             android:icon="@drawable/ic_notification"
             android:label="@string/app_name"
@@ -62,13 +62,13 @@
                 android:value="true" />
         </service>
 
-        <receiver android:name=".NotificationActionReceiver">
+        <receiver android:name=".receiver.NotificationActionReceiver">
             <intent-filter>
                 <action android:name="com.willme.topactivity.ACTION_NOTIFICATION_RECEIVER" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".PermissionsActivity"></activity>
+        <activity android:name=".view.PermissionsActivity"></activity>
     </application>
 
 </manifest>

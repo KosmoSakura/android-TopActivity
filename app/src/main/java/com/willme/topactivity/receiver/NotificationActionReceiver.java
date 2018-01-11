@@ -1,4 +1,4 @@
-package com.willme.topactivity;
+package com.willme.topactivity.receiver;
 
 import android.app.ActivityManager;
 import android.app.NotificationManager;
@@ -8,6 +8,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+
+import com.willme.topactivity.view.MainActivity;
+import com.willme.topactivity.service.QuickSettingTileService;
+import com.willme.topactivity.R;
+import com.willme.topactivity.tool.SPHelper;
+import com.willme.topactivity.tool.TasksWindow;
 
 import java.util.List;
 

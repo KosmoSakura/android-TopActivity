@@ -5,7 +5,7 @@
     android:id="@+id/activity_permissions"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.willme.topactivity.PermissionsActivity">
+    tools:context="com.willme.topactivity.view.PermissionsActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

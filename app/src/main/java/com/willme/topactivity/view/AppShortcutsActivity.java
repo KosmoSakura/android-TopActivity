@@ -1,4 +1,4 @@
-package com.willme.topactivity;
+package com.willme.topactivity.view;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -7,6 +7,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+
+import com.willme.topactivity.tool.SPHelper;
+import com.willme.topactivity.tool.TasksWindow;
+import com.willme.topactivity.receiver.NotificationActionReceiver;
+import com.willme.topactivity.receiver.WatchingAccessibilityService;
 
 /**
  * Created by Wen on 16/02/2017.

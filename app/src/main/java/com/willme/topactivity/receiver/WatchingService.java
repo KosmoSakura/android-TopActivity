@@ -1,4 +1,4 @@
-package com.willme.topactivity;
+package com.willme.topactivity.receiver;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
@@ -15,6 +15,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
+
+import com.willme.topactivity.tool.SPHelper;
+import com.willme.topactivity.tool.TasksWindow;
 
 import java.util.List;
 import java.util.Timer;

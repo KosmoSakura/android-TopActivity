@@ -1,7 +1,9 @@
-package com.willme.topactivity;
+package com.willme.topactivity.view;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.willme.topactivity.R;
 
 public class PermissionsActivity extends Activity {
 

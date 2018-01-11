@@ -1,9 +1,13 @@
-package com.willme.topactivity;
+package com.willme.topactivity.receiver;
 
 import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.accessibility.AccessibilityEvent;
+
+import com.willme.topactivity.tool.SPHelper;
+import com.willme.topactivity.tool.TasksWindow;
+import com.willme.topactivity.service.QuickSettingTileService;
 
 /**
  * Created by Wen on 1/14/15.
