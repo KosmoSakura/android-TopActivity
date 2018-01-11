@@ -36,13 +36,11 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mWindowSwitch = (CompoundButton) findViewById(R.id.sw_window);
+        mWindowSwitch = findViewById(R.id.sw_window);
         mWindowSwitch.setOnCheckedChangeListener(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            if (!getResources().getBoolean(R.bool.qs_tile_service_availability)) {
-                findViewById(R.id.useNotificationPref).setVisibility(View.GONE);
-                findViewById(R.id.divider_useNotificationPref).setVisibility(View.GONE);
-            }
+        if (!getResources().getBoolean(R.bool.qs_tile_service_availability)) {
+            findViewById(R.id.useNotificationPref).setVisibility(View.GONE);
+            findViewById(R.id.divider_useNotificationPref).setVisibility(View.GONE);
         }
         mNotificationSwitch = findViewById(R.id.sw_notification);
         mDragFloatWindow = findViewById(R.id.show_float_window);
@@ -189,11 +187,13 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
             }
         }
         if (buttonView == mDragFloatWindow) {
+            SPHelper.setIsShowWindow(this, isChecked);
             if (isChecked) {
                 showFloatView();
                 buttonView.setChecked(FloatView.isFloatting());
             } else {
                 hideFloatView();
+                TasksWindow.dismiss(this);
             }
         }
     }
@@ -222,6 +222,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
             }
         });
         FloatView.showFloatView(this, R.layout.window_float);
+        TasksWindow.show(this, getPackageName() + "\n" + getClass().getName());
     }
 
     /**
