@@ -11,23 +11,25 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import com.willme.topactivity.R;
-import com.willme.topactivity.tool.SPHelper;
-import com.willme.topactivity.tool.TasksWindow;
 import com.willme.topactivity.receiver.NotificationActionReceiver;
 import com.willme.topactivity.receiver.WatchingAccessibilityService;
 import com.willme.topactivity.receiver.WatchingService;
+import com.willme.topactivity.tool.SPHelper;
+import com.willme.topactivity.tool.TasksWindow;
+import com.willme.topactivity.widget.FloatView;
 
 public class MainActivity extends Activity implements OnCheckedChangeListener {
-
     public static final String EXTRA_FROM_QS_TILE = "from_qs_tile";
     public static final String ACTION_STATE_CHANGED = "com.willme.topactivity.ACTION_STATE_CHANGED";
-    CompoundButton mWindowSwitch, mNotificationSwitch;
+    CompoundButton mWindowSwitch, mNotificationSwitch, mDragFloatWindow;
     private BroadcastReceiver mReceiver;
 
     @Override
@@ -43,8 +45,12 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
             }
         }
         mNotificationSwitch = findViewById(R.id.sw_notification);
+        mDragFloatWindow = findViewById(R.id.show_float_window);
         if (mNotificationSwitch != null) {
             mNotificationSwitch.setOnCheckedChangeListener(this);
+        }
+        if (mDragFloatWindow != null) {
+            mDragFloatWindow.setOnCheckedChangeListener(this);
         }
         if (getResources().getBoolean(R.bool.use_watching_service)) {
             TasksWindow.show(this, "");
@@ -182,6 +188,47 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
                 TasksWindow.show(this, getPackageName() + "\n" + getClass().getName());
             }
         }
+        if (buttonView == mDragFloatWindow) {
+            if (isChecked) {
+                showFloatView();
+                buttonView.setChecked(FloatView.isFloatting());
+            } else {
+                hideFloatView();
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == FloatView.REQUEST_CODE) {
+            if (Settings.canDrawOverlays(this)) {
+                showFloatView();
+            } else {
+                Toast.makeText(this, "授权失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * 显示悬浮窗
+     */
+    private void showFloatView() {
+        FloatView.setOnClickListener(new FloatView.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("399", "点击了");
+            }
+        });
+        FloatView.showFloatView(this, R.layout.window_float);
+    }
+
+    /**
+     * 隐藏悬浮窗
+     */
+    public void hideFloatView() {
+        FloatView.hideFloatView();
     }
 
     @Override

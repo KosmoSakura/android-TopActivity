@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.willme.topactivity.R;
 import com.willme.topactivity.service.QuickSettingTileService;
+import com.willme.topactivity.widget.FloatView;
 
 public class TasksWindow {
 
@@ -37,6 +38,7 @@ public class TasksWindow {
         if (sWindowManager == null) {
             init(context);
         }
+        FloatView.setText(text);
         TextView textView = sView.findViewById(R.id.text);
         textView.setText(text);
         try {
