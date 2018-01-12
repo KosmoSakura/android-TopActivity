@@ -10,7 +10,7 @@ public class SPHelper {
 
     public static boolean isShowWindow(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean(Code.SP.WINDOWS_SHOW_FLAG, true);
+        return sp.getBoolean(Code.SP.WINDOWS_SHOW_FLAG, false);
     }
 
     public static void setIsShowWindow(Context context, boolean isShow) {
@@ -29,11 +29,11 @@ public class SPHelper {
     }
 
     public static boolean isNotificationOn(Context context) {
-        if (!hasQSTileAdded(context)) {
-            return true;
-        }
+//        if (!hasQSTileAdded(context)) {
+//            return true;
+//        }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean(Code.SP.TOGGLE_ENABLED, true);
+        return sp.getBoolean(Code.SP.TOGGLE_ENABLED, false);
     }
 
     public static void setNotification(Context context, boolean isEnabled) {

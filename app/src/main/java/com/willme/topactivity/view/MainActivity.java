@@ -35,7 +35,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
         mNotificationSwitch.setOnCheckedChangeListener(this);
         mWindowSwitch.setOnCheckedChangeListener(this);
 
-        TasksWindow.getInstance(this).show("");
+//        TasksWindow.getInstance(this).show("");
         startService(new Intent(this, WatchingService.class));
 
         mReceiver = new BroadcastReceiver() {
@@ -78,7 +78,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
         switch (buttonView.getId()) {
             case R.id.sw_window://显示可拖拽悬浮窗
                 if (isChecked) {
-                    TasksWindow.getInstance(this).show(getPackageName() + "\n" + getClass().getName());
+                    TasksWindow.getInstance(this).show(true, getPackageName() + "\n" + getClass().getName());
                 } else {
                     TasksWindow.getInstance(this).dismiss();
                 }

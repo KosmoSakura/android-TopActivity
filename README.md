@@ -11,6 +11,6 @@ To track the activities in shell you can run this shell script: [current_activit
 - 将原来显示到顶部的悬浮框做成了可拖动的效果。
 - 取消辅助权限
 
-![效果图](https://github.com/KosmoSakura/android-TopActivity/raw/master/img/Animation.gif)
+![效果图](https://github.com/KosmoSakura/android-TopActivity/raw/master/img/show.gif)
 
-持续修改中...
+## 持续修改中...

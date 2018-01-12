@@ -1,6 +1,5 @@
 package com.willme.topactivity.tool;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,8 +16,6 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.willme.topactivity.R;
-import com.willme.topactivity.constant.Code;
-import com.willme.topactivity.service.QuickSettingTileService;
 
 public class TasksWindow {
     private static TasksWindow window;
@@ -26,7 +23,8 @@ public class TasksWindow {
 
     private TasksWindow(Context ctx) {
         context = ctx;
-        mWindowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        mWindowManager = (WindowManager) context.getApplicationContext().getSystemService(Context
+            .WINDOW_SERVICE);
         wmParams = new WindowManager.LayoutParams();
         wmParams.type = WindowManager.LayoutParams.TYPE_PHONE;
         wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
@@ -69,15 +67,25 @@ public class TasksWindow {
         return isShow;
     }
 
-
     public void show(String... text) {
-        if (Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(context)) {
+        show(false, text);
+    }
+
+    public void show(boolean showPermission, String... text) {
+        if (context == null || text == null) {
+            return;
+        }
+        if (showPermission && Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(context)) {
             new AlertDialog.Builder(context)
                 .setMessage(R.string.dialog_enable_overlay_window_msg)
                 .setPositiveButton(R.string.dialog_enable_overlay_window_positive_btn
                     , new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+//                            if ( context instanceof Activity) {
+//                                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+//                                ((Activity) context).startActivityForResult(intent, Code.ConstantInt.REQUEST_CODE);
+//                            }
                             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                             intent.setData(Uri.parse("package:" + context.getPackageName()));
                             context.startActivity(intent);
@@ -99,40 +107,37 @@ public class TasksWindow {
                 })
                 .create()
                 .show();
-
-            if (context instanceof Activity) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                ((Activity) context).startActivityForResult(intent, Code.ConstantInt.REQUEST_CODE);
-            }
             return;
         }
 
 
         try {
-            mWindowManager.addView(mView, wmParams);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        SPHelper.setIsShowWindow(context, true);
-
-        if (text != null) {
-            if (text.length < 2) {
-                Loo.d("Show:" + text[0]);
-                tSHow.setText(text[0]);
-            } else {
-                // com.willme.topactivity.view.MainActivity
-                String str = text[1];
-                String[] arr = str.split("\\.");
-                Loo.d("-->" + arr.length + "--" + str);
-                if (arr.length > 0) {
-                    str = arr[arr.length - 1];
-                }
-
-                tSHow.setText("包名：" + text[0] + "\n类名：" + str);
+            if (isShow) {
+                mWindowManager.removeView(mView);
             }
+            mWindowManager.addView(mView, wmParams);
+            SPHelper.setIsShowWindow(context, true);
+            isShow = true;
+        } catch (Exception e) {
+            SPHelper.setIsShowWindow(context, false);
+            isShow = false;
+            return;
         }
 
-        isShow = true;
+        if (text.length < 2) {
+            Loo.d("Show:" + text[0]);
+            tSHow.setText(text[0]);
+        } else {
+            // com.willme.topactivity.view.MainActivity
+            String str = text[1];
+            String[] arr = str.split("\\.");
+            Loo.d("-->" + arr.length + "--" + str);
+            if (arr.length > 0) {
+                str = arr[arr.length - 1];
+            }
+
+            tSHow.setText("包名：" + text[0] + "\n类名：" + str);
+        }
 
         mView.setOnTouchListener(new View.OnTouchListener() {
             float downX = 0;
@@ -163,7 +168,8 @@ public class TasksWindow {
                     case MotionEvent.ACTION_UP:
                         int newOffsetX = wmParams.x;
                         int newOffsetY = wmParams.y;
-                        if (Math.abs(newOffsetX - oddOffsetX) <= 20 && Math.abs(newOffsetY - oddOffsetY) <= 20) {
+                        if (Math.abs(newOffsetX - oddOffsetX) <= 20 && Math.abs(newOffsetY -
+                            oddOffsetY) <= 20) {
                             if (mListener != null) {
                                 mListener.onClick(mView);
                             }
@@ -175,22 +181,22 @@ public class TasksWindow {
 
         });
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            QuickSettingTileService.updateTile(context);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+//            QuickSettingTileService.updateTile(context);
     }
 
     public void dismiss() {
         if (isShow && mWindowManager != null) {
             try {
                 mWindowManager.removeView(mView);
-
                 SPHelper.setIsShowWindow(context, false);
+                isShow = false;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        isShow = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            QuickSettingTileService.updateTile(context);
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+//            QuickSettingTileService.updateTile(context);
     }
 }
