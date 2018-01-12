@@ -43,5 +43,5 @@
     <color name="android">#2E7D32</color>
     <color name="dark_gray">#333333</color>
     <color name="toast_black">#21211d</color>
-
+    <color name="theme_main">#e015de</color>
 </resources>

@@ -4,38 +4,40 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.willme.topactivity.constant.Code;
+
 public class SPHelper {
 
-    public static boolean isShowWindow(Context context){
+    public static boolean isShowWindow(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean("is_show_window", true);
+        return sp.getBoolean(Code.SP.WINDOWS_SHOW_FLAG, true);
     }
 
-    public static void setIsShowWindow(Context context, boolean isShow){
+    public static void setIsShowWindow(Context context, boolean isShow) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putBoolean("is_show_window", isShow).commit();
+        sp.edit().putBoolean(Code.SP.WINDOWS_SHOW_FLAG, isShow).apply();
     }
 
-    public static boolean hasQSTileAdded(Context context){
+    public static boolean hasQSTileAdded(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean("has_qs_tile_added", false);
+        return sp.getBoolean(Code.SP.HAS_AS_TITLE_ADD, false);
     }
 
-    public static void setQSTileAdded(Context context, boolean added){
+    public static void setQSTileAdded(Context context, boolean added) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putBoolean("has_qs_tile_added", added).commit();
+        sp.edit().putBoolean(Code.SP.HAS_AS_TITLE_ADD, added).apply();
     }
 
-    public static boolean isNotificationToggleEnabled(Context context){
-        if(!hasQSTileAdded(context)){
+    public static boolean isNotificationOn(Context context) {
+        if (!hasQSTileAdded(context)) {
             return true;
         }
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean("is_noti_toggle_enabled", true);
+        return sp.getBoolean(Code.SP.TOGGLE_ENABLED, true);
     }
 
-    public static void setNotificationToggleEnabled(Context context, boolean isEnabled){
+    public static void setNotification(Context context, boolean isEnabled) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.edit().putBoolean("is_noti_toggle_enabled", isEnabled).commit();
+        sp.edit().putBoolean(Code.SP.TOGGLE_ENABLED, isEnabled).apply();
     }
 }

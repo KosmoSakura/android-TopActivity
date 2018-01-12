@@ -26,7 +26,7 @@ import java.util.TimerTask;
 public class WatchingService extends Service {
 
     private Handler mHandler = new Handler();
-    private  ActivityManager mActivityManager;
+    private ActivityManager mActivityManager;
     private String text = null;
     private Timer timer;
     private NotificationManager mNotiManager;
@@ -59,16 +59,16 @@ public class WatchingService extends Service {
         public void run() {
             List<RunningTaskInfo> rtis = mActivityManager.getRunningTasks(1);
             String act = rtis.get(0).topActivity.getPackageName() + "\n"
-                    + rtis.get(0).topActivity.getClassName();
+                + rtis.get(0).topActivity.getClassName();
 
             if (!act.equals(text)) {
                 text = act;
-                if(SPHelper.isShowWindow(WatchingService.this)){
+                if (SPHelper.isShowWindow(WatchingService.this)) {
 
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            TasksWindow.show(WatchingService.this, text);
+                            TasksWindow.getInstance(WatchingService.this).show(text);
                         }
                     });
                 }
@@ -81,17 +81,17 @@ public class WatchingService extends Service {
     public void onTaskRemoved(Intent rootIntent) {
         Log.e("FLAGX : ", ServiceInfo.FLAG_STOP_WITH_TASK + "");
         Intent restartServiceIntent = new Intent(getApplicationContext(),
-                this.getClass());
+            this.getClass());
         restartServiceIntent.setPackage(getPackageName());
 
         PendingIntent restartServicePendingIntent = PendingIntent.getService(
-                getApplicationContext(), 1, restartServiceIntent,
-                PendingIntent.FLAG_ONE_SHOT);
+            getApplicationContext(), 1, restartServiceIntent,
+            PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmService = (AlarmManager) getApplicationContext()
-                .getSystemService(Context.ALARM_SERVICE);
+            .getSystemService(Context.ALARM_SERVICE);
         alarmService.set(AlarmManager.ELAPSED_REALTIME,
-                SystemClock.elapsedRealtime() + 500,
-                restartServicePendingIntent);
+            SystemClock.elapsedRealtime() + 500,
+            restartServicePendingIntent);
         super.onTaskRemoved(rootIntent);
     }
 

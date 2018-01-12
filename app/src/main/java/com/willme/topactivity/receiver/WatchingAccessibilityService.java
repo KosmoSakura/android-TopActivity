@@ -5,9 +5,9 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.accessibility.AccessibilityEvent;
 
+import com.willme.topactivity.constant.Code;
 import com.willme.topactivity.tool.SPHelper;
 import com.willme.topactivity.tool.TasksWindow;
-import com.willme.topactivity.service.QuickSettingTileService;
 
 /**
  * Created by Wen on 1/14/15.
@@ -19,9 +19,9 @@ public class WatchingAccessibilityService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
-        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED){
-            if(SPHelper.isShowWindow(this)){
-                TasksWindow.show(this, event.getPackageName() + "\n" + event.getClassName());
+        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            if (SPHelper.isShowWindow(this)) {
+                TasksWindow.getInstance(this).show(event.getPackageName() + "\n" + event.getClassName());
             }
         }
 
@@ -34,23 +34,23 @@ public class WatchingAccessibilityService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         sInstance = this;
-        if(SPHelper.isShowWindow(this)){
+        if (SPHelper.isShowWindow(this)) {
             NotificationActionReceiver.showNotification(this, false);
         }
-        sendBroadcast(new Intent(QuickSettingTileService.ACTION_UPDATE_TITLE));
+        sendBroadcast(new Intent(Code.ConstantStr.ACTION_UPDATE_TITLE));
         super.onServiceConnected();
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
         sInstance = null;
-        TasksWindow.dismiss(this);
+        TasksWindow.getInstance(this).dismiss();
         NotificationActionReceiver.cancelNotification(this);
-        sendBroadcast(new Intent(QuickSettingTileService.ACTION_UPDATE_TITLE));
+        sendBroadcast(new Intent(Code.ConstantStr.ACTION_UPDATE_TITLE));
         return super.onUnbind(intent);
     }
 
-    public static WatchingAccessibilityService getInstance(){
+    public static WatchingAccessibilityService getInstance() {
         return sInstance;
     }
 

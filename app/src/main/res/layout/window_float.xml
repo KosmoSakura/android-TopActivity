@@ -9,9 +9,9 @@
     <TextView
         android:id="@+id/float_text"
         android:layout_width="wrap_content"
-        android:background="@drawable/rect_blue_round_all_cirlce"
         android:layout_height="wrap_content"
-        android:padding="3dp"
+        android:background="@drawable/rect_blue_round_all_cirlce"
+        android:padding="10dp"
         android:text="cnasiou"
         android:textColor="#a8f5de"/>
 </LinearLayout>

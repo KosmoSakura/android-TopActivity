@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.willme.topactivity.R;
+import com.willme.topactivity.constant.Code;
 import com.willme.topactivity.tool.SPHelper;
 
 /**
@@ -26,7 +27,6 @@ import com.willme.topactivity.tool.SPHelper;
  * @Description:
  */
 public class FloatView {
-    public final static int REQUEST_CODE = 100;
     private static WindowManager mWindowManager;
     private static WindowManager.LayoutParams wmParams;
     private static TextView tSHow;
@@ -51,6 +51,23 @@ public class FloatView {
         if (str != null && tSHow != null) {
             tSHow.setText(str);
         }
+    }
+
+    public static void init(final Context context) {
+        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        wmParams = new WindowManager.LayoutParams();
+        wmParams.type = WindowManager.LayoutParams.TYPE_PHONE;
+        wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        wmParams.gravity = Gravity.CENTER;
+        wmParams.format = PixelFormat.RGBA_8888;
+        wmParams.x = context.getResources().getDisplayMetrics().widthPixels;
+        wmParams.y = 0;
+
+        wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        mView = LayoutInflater.from(context).inflate(R.layout.window_float, null);
+        tSHow = mView.findViewById(R.id.float_text);
     }
 
     /**
@@ -86,29 +103,17 @@ public class FloatView {
                 .create()
                 .show();
 
-
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-            context.startActivityForResult(intent, REQUEST_CODE);
+            context.startActivityForResult(intent, Code.ConstantInt.REQUEST_CODE);
             return;
         } else if (isShow) {
             return;
         }
-        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        wmParams = new WindowManager.LayoutParams();
-        wmParams.type = WindowManager.LayoutParams.TYPE_PHONE;
-        wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        wmParams.gravity = Gravity.CENTER;
-        wmParams.format = PixelFormat.RGBA_8888;
-        wmParams.x = context.getResources().getDisplayMetrics().widthPixels;
-        wmParams.y = 0;
-
-        wmParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        wmParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-        mView = LayoutInflater.from(context).inflate(layoutId, null);
-        tSHow = mView.findViewById(R.id.float_text);
+        if (mWindowManager == null) {
+            init(context);
+        }
         mWindowManager.addView(mView, wmParams);
-
+        SPHelper.setIsShowWindow(context, true);
 
         mView.setOnTouchListener(new View.OnTouchListener() {
             float downX = 0;
@@ -157,9 +162,10 @@ public class FloatView {
     /**
      * 隐藏悬浮窗
      */
-    public static void hideFloatView() {
+    public static void hideFloatView(final Activity context) {
         if (mWindowManager != null && isShow) {
             mWindowManager.removeView(mView);
+            SPHelper.setIsShowWindow(context, false);
             isShow = false;
         }
     }

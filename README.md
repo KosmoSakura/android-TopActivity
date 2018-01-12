@@ -13,4 +13,4 @@ To track the activities in shell you can run this shell script: [current_activit
 
 ![效果图](https://github.com/KosmoSakura/android-TopActivity/raw/master/img/Animation.gif)
 
-持续修改中
+持续修改中...

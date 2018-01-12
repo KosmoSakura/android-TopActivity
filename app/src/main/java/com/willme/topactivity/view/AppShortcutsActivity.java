@@ -8,10 +8,11 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 
-import com.willme.topactivity.tool.SPHelper;
-import com.willme.topactivity.tool.TasksWindow;
+import com.willme.topactivity.constant.Code;
 import com.willme.topactivity.receiver.NotificationActionReceiver;
 import com.willme.topactivity.receiver.WatchingAccessibilityService;
+import com.willme.topactivity.tool.SPHelper;
+import com.willme.topactivity.tool.TasksWindow;
 
 /**
  * Created by Wen on 16/02/2017.
@@ -24,7 +25,7 @@ public class AppShortcutsActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(WatchingAccessibilityService.getInstance() == null || !Settings.canDrawOverlays(this)){
+        if (WatchingAccessibilityService.getInstance() == null || !Settings.canDrawOverlays(this)) {
             SPHelper.setIsShowWindow(this, true);
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -34,14 +35,14 @@ public class AppShortcutsActivity extends Activity {
 
         boolean isShow = !SPHelper.isShowWindow(this);
         SPHelper.setIsShowWindow(this, isShow);
-        if(!isShow){
-            TasksWindow.dismiss(this);
+        if (!isShow) {
+            TasksWindow.getInstance(this).dismiss();
             NotificationActionReceiver.showNotification(this, true);
-        }else{
-            TasksWindow.show(this, getPackageName()+"\n"+getClass().getName());
+        } else {
+            TasksWindow.getInstance(this).show(getPackageName() + "\n" + getClass().getName());
             NotificationActionReceiver.showNotification(this, false);
         }
-        sendBroadcast(new Intent(MainActivity.ACTION_STATE_CHANGED));
+        sendBroadcast(new Intent(Code.ConstantStr.ACTION_STATE_CHANGED));
         finish();
     }
 }
