@@ -13,5 +13,5 @@
         android:background="@drawable/rect_blue_round_all_cirlce"
         android:padding="10dp"
         android:text="cnasiou"
-        android:textColor="#a8f5de"/>
+        android:textColor="@color/theme_main"/>
 </LinearLayout>

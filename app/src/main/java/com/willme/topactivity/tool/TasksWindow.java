@@ -23,8 +23,7 @@ public class TasksWindow {
 
     private TasksWindow(Context ctx) {
         context = ctx;
-        mWindowManager = (WindowManager) context.getApplicationContext().getSystemService(Context
-            .WINDOW_SERVICE);
+        mWindowManager = (WindowManager) context.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         wmParams = new WindowManager.LayoutParams();
         wmParams.type = WindowManager.LayoutParams.TYPE_PHONE;
         wmParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
@@ -82,10 +81,6 @@ public class TasksWindow {
                     , new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-//                            if ( context instanceof Activity) {
-//                                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-//                                ((Activity) context).startActivityForResult(intent, Code.ConstantInt.REQUEST_CODE);
-//                            }
                             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                             intent.setData(Uri.parse("package:" + context.getPackageName()));
                             context.startActivity(intent);

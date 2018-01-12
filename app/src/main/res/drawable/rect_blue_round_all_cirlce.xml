@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <solid android:color="@color/toast_black"/>
+    <solid android:color="@color/T_mini_black"/>
 
     <padding
         android:bottom="2dp"
@@ -12,6 +12,6 @@
         android:radius="3dp"/>
     <stroke
         android:width="1dp"
-        android:color="@color/default_blue"
+        android:color="@color/theme_main"
         />
 </shape>
