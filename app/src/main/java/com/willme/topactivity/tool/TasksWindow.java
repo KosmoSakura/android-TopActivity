@@ -71,7 +71,6 @@ public class TasksWindow {
 
 
     public void show(String... text) {
-
         if (Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(context)) {
             new AlertDialog.Builder(context)
                 .setMessage(R.string.dialog_enable_overlay_window_msg)
@@ -126,7 +125,7 @@ public class TasksWindow {
                 String[] arr = str.split("\\.");
                 Loo.d("-->" + arr.length + "--" + str);
                 if (arr.length > 0) {
-                    str = arr[arr.length-1];
+                    str = arr[arr.length - 1];
                 }
 
                 tSHow.setText("包名：" + text[0] + "\n类名：" + str);

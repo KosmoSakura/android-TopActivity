@@ -35,8 +35,6 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
         mNotificationSwitch.setOnCheckedChangeListener(this);
         mWindowSwitch.setOnCheckedChangeListener(this);
 
-        if (getResources().getBoolean(R.bool.use_watching_service)) {
-        }
         TasksWindow.getInstance(this).show("");
         startService(new Intent(this, WatchingService.class));
 
