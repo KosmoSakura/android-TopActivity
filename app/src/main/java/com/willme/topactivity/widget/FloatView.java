@@ -1,9 +1,12 @@
 package com.willme.topactivity.widget;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.view.Gravity;
@@ -14,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.willme.topactivity.R;
+import com.willme.topactivity.tool.SPHelper;
 
 /**
  * @Author: Kosmos
@@ -52,8 +56,37 @@ public class FloatView {
     /**
      * 显示悬浮框
      */
-    public static void showFloatView(Activity context, int layoutId) {
+    public static void showFloatView(final Activity context, int layoutId) {
         if (Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(context)) {
+            new AlertDialog.Builder(context)
+                .setMessage(R.string.dialog_enable_overlay_window_msg)
+                .setPositiveButton(R.string.dialog_enable_overlay_window_positive_btn
+                    , new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                            intent.setData(Uri.parse("package:" + context.getPackageName()));
+                            context.startActivity(intent);
+                            dialog.dismiss();
+                        }
+                    })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SPHelper.setIsShowWindow(context, false);
+                        dialog.dismiss();
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        SPHelper.setIsShowWindow(context, false);
+                    }
+                })
+                .create()
+                .show();
+
+
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
             context.startActivityForResult(intent, REQUEST_CODE);
             return;

@@ -1,13 +1,10 @@
 package com.willme.topactivity.view;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -29,7 +26,7 @@ import com.willme.topactivity.widget.FloatView;
 public class MainActivity extends Activity implements OnCheckedChangeListener {
     public static final String EXTRA_FROM_QS_TILE = "from_qs_tile";
     public static final String ACTION_STATE_CHANGED = "com.willme.topactivity.ACTION_STATE_CHANGED";
-    CompoundButton mWindowSwitch, mNotificationSwitch, mDragFloatWindow;
+    CompoundButton mWindowSwitch, mNotificationSwitch;
     private BroadcastReceiver mReceiver;
 
     @Override
@@ -43,12 +40,8 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
             findViewById(R.id.divider_useNotificationPref).setVisibility(View.GONE);
         }
         mNotificationSwitch = findViewById(R.id.sw_notification);
-        mDragFloatWindow = findViewById(R.id.show_float_window);
         if (mNotificationSwitch != null) {
             mNotificationSwitch.setOnCheckedChangeListener(this);
-        }
-        if (mDragFloatWindow != null) {
-            mDragFloatWindow.setOnCheckedChangeListener(this);
         }
         if (getResources().getBoolean(R.bool.use_watching_service)) {
             TasksWindow.show(this, "");
@@ -102,100 +95,133 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (buttonView == mNotificationSwitch) {
-            if (SPHelper.hasQSTileAdded(this)) {
-                SPHelper.setNotificationToggleEnabled(this, !isChecked);
-            } else if (isChecked) {
-                Toast.makeText(this, R.string.toast_add_tile, Toast.LENGTH_LONG).show();
-                buttonView.setChecked(false);
-            } else {
-                SPHelper.setNotificationToggleEnabled(this, !isChecked);
-            }
-            return;
+        switch (buttonView.getId()) {
+            case R.id.sw_window://显示可拖拽悬浮窗
+                SPHelper.setIsShowWindow(this, isChecked);
+                if (isChecked) {
+                    showFloatView();
+                    buttonView.setChecked(FloatView.isFloatting());
+                } else {
+                    hideFloatView();
+                    TasksWindow.dismiss(this);
+                }
+
+
+                SPHelper.setIsShowWindow(this, isChecked);
+                if (!isChecked) {
+                    TasksWindow.dismiss(this);
+                } else {
+                    TasksWindow.show(this, getPackageName() + "\n" + getClass().getName());
+                }
+                break;
+            case R.id.sw_notification://快速设置开关启用时关闭通知开关 mNotificationSwitch
+                if (SPHelper.hasQSTileAdded(this)) {
+                    SPHelper.setNotificationToggleEnabled(this, !isChecked);
+                } else if (isChecked) {
+                    Toast.makeText(this, R.string.toast_add_tile, Toast.LENGTH_LONG).show();
+                    buttonView.setChecked(false);
+                } else {
+                    SPHelper.setNotificationToggleEnabled(this, !isChecked);
+                }
+                break;
         }
-        if (isChecked && buttonView == mWindowSwitch && getResources().getBoolean(R.bool.use_accessibility_service)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1 && !Settings.canDrawOverlays(this)) {
-                new AlertDialog.Builder(this)
-                    .setMessage(R.string.dialog_enable_overlay_window_msg)
-                    .setPositiveButton(R.string.dialog_enable_overlay_window_positive_btn
-                        , new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                                intent.setData(Uri.parse("package:" + getPackageName()));
-                                startActivity(intent);
-                                dialog.dismiss();
-                            }
-                        })
-                    .setNegativeButton(android.R.string.cancel
-                        , new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                SPHelper.setIsShowWindow(MainActivity.this, false);
-                                refreshWindowSwitch();
-                            }
-                        })
-                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            SPHelper.setIsShowWindow(MainActivity.this, false);
-                            refreshWindowSwitch();
-                        }
-                    })
-                    .create()
-                    .show();
-                buttonView.setChecked(false);
-                return;
-            } else if (WatchingAccessibilityService.getInstance() == null) {
-                new AlertDialog.Builder(this)
-                    .setMessage(R.string.dialog_enable_accessibility_msg)
-                    .setPositiveButton(R.string.dialog_enable_accessibility_positive_btn
-                        , new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                SPHelper.setIsShowWindow(MainActivity.this, true);
-                                Intent intent = new Intent();
-                                intent.setAction("android.settings.ACCESSIBILITY_SETTINGS");
-                                startActivity(intent);
-                            }
-                        })
-                    .setNegativeButton(android.R.string.cancel
-                        , new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                refreshWindowSwitch();
-                            }
-                        })
-                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            refreshWindowSwitch();
-                        }
-                    })
-                    .create()
-                    .show();
-                SPHelper.setIsShowWindow(this, true);
-                return;
-            }
-        }
-        if (buttonView == mWindowSwitch) {
-            SPHelper.setIsShowWindow(this, isChecked);
-            if (!isChecked) {
-                TasksWindow.dismiss(this);
-            } else {
-                TasksWindow.show(this, getPackageName() + "\n" + getClass().getName());
-            }
-        }
-        if (buttonView == mDragFloatWindow) {
-            SPHelper.setIsShowWindow(this, isChecked);
-            if (isChecked) {
-                showFloatView();
-                buttonView.setChecked(FloatView.isFloatting());
-            } else {
-                hideFloatView();
-                TasksWindow.dismiss(this);
-            }
-        }
+
+
+//        if (buttonView == mNotificationSwitch) {
+//            if (SPHelper.hasQSTileAdded(this)) {
+//                SPHelper.setNotificationToggleEnabled(this, !isChecked);
+//            } else if (isChecked) {
+//                Toast.makeText(this, R.string.toast_add_tile, Toast.LENGTH_LONG).show();
+//                buttonView.setChecked(false);
+//            } else {
+//                SPHelper.setNotificationToggleEnabled(this, !isChecked);
+//            }
+//            return;
+//        }
+
+
+//        if (isChecked && buttonView == mWindowSwitch && getResources().getBoolean(R.bool.use_accessibility_service)) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1 && !Settings.canDrawOverlays(this)) {
+//                new AlertDialog.Builder(this)
+//                    .setMessage(R.string.dialog_enable_overlay_window_msg)
+//                    .setPositiveButton(R.string.dialog_enable_overlay_window_positive_btn
+//                        , new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+//                                intent.setData(Uri.parse("package:" + getPackageName()));
+//                                startActivity(intent);
+//                                dialog.dismiss();
+//                            }
+//                        })
+//                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            SPHelper.setIsShowWindow(MainActivity.this, false);
+//                            refreshWindowSwitch();
+//                        }
+//                    })
+//                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                        @Override
+//                        public void onCancel(DialogInterface dialog) {
+//                            SPHelper.setIsShowWindow(MainActivity.this, false);
+//                            refreshWindowSwitch();
+//                        }
+//                    })
+//                    .create()
+//                    .show();
+//                buttonView.setChecked(false);
+//                return;
+//            } else if (WatchingAccessibilityService.getInstance() == null) {
+//                new AlertDialog.Builder(this)
+//                    .setMessage(R.string.dialog_enable_accessibility_msg)
+//                    .setPositiveButton(R.string.dialog_enable_accessibility_positive_btn, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            SPHelper.setIsShowWindow(MainActivity.this, true);
+//                            Intent intent = new Intent();
+//                            intent.setAction("android.settings.ACCESSIBILITY_SETTINGS");
+//                            startActivity(intent);
+//                        }
+//                    })
+//                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            refreshWindowSwitch();
+//                        }
+//                    })
+//                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                        @Override
+//                        public void onCancel(DialogInterface dialog) {
+//                            refreshWindowSwitch();
+//                        }
+//                    })
+//                    .create()
+//                    .show();
+//                SPHelper.setIsShowWindow(this, true);
+//                return;
+//            }
+//        }
+
+
+//        if (buttonView == mWindowSwitch) {
+//            SPHelper.setIsShowWindow(this, isChecked);
+//            if (isChecked) {
+//                showFloatView();
+//                buttonView.setChecked(FloatView.isFloatting());
+//            } else {
+//                hideFloatView();
+//                TasksWindow.dismiss(this);
+//            }
+//
+//
+//            SPHelper.setIsShowWindow(this, isChecked);
+//            if (!isChecked) {
+//                TasksWindow.dismiss(this);
+//            } else {
+//                TasksWindow.show(this, getPackageName() + "\n" + getClass().getName());
+//            }
+//        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
