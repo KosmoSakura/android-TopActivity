@@ -8,7 +8,8 @@ To track the activities in shell you can run this shell script: [current_activit
 
 # 改动
 
-将原来显示到顶部的悬浮框做成了可拖动的效果。
+- 将原来显示到顶部的悬浮框做成了可拖动的效果。
+- 取消辅助权限
 
 ![效果图](https://github.com/KosmoSakura/android-TopActivity/raw/master/img/Animation.gif)
 
