@@ -12,5 +12,6 @@ To track the activities in shell you can run this shell script: [current_activit
 - 取消辅助权限
 
 ![效果图](https://github.com/KosmoSakura/android-TopActivity/raw/master/img/show.gif)
+![效果图](https://github.com/KosmoSakura/android-TopActivity/raw/master/img/Snipaste.png)
 
 ## 持续修改中...
