@@ -1,4 +1,4 @@
-package com.willme.topactivity.receiver;
+package com.willme.topactivity.service;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
@@ -14,8 +14,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.util.Log;
 
+import com.willme.topactivity.tool.Loo;
 import com.willme.topactivity.tool.SPHelper;
 import com.willme.topactivity.tool.TasksWindow;
 
@@ -24,13 +24,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class WatchingService extends Service {
-
     private Handler mHandler = new Handler();
     private ActivityManager mActivityManager;
-    private String text = null;
+    private String text = "";
     private Timer timer;
     private NotificationManager mNotiManager;
-    private final int NOTIF_ID = 1;
 
     @Override
     public void onCreate() {
@@ -48,27 +46,28 @@ public class WatchingService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (timer == null) {
             timer = new Timer();
-            timer.scheduleAtFixedRate(new RefreshTask(), 0, 500);
+            timer.scheduleAtFixedRate(new RefreshTask(), 500, 500);
         }
         return super.onStartCommand(intent, flags, startId);
     }
 
     class RefreshTask extends TimerTask {
-
         @Override
         public void run() {
             List<RunningTaskInfo> rtis = mActivityManager.getRunningTasks(1);
-            String act = rtis.get(0).topActivity.getPackageName() + "\n"
-                + rtis.get(0).topActivity.getClassName();
+
+            final String packName = rtis.get(0).topActivity.getPackageName();
+            final String className = rtis.get(0).topActivity.getClassName();
+
+            String act = packName + className;
 
             if (!act.equals(text)) {
                 text = act;
                 if (SPHelper.isShowWindow(WatchingService.this)) {
-
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            TasksWindow.getInstance(WatchingService.this).show(text);
+                            TasksWindow.getInstance(WatchingService.this).show(packName, className);
                         }
                     });
                 }
@@ -79,19 +78,21 @@ public class WatchingService extends Service {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        Log.e("FLAGX : ", ServiceInfo.FLAG_STOP_WITH_TASK + "");
-        Intent restartServiceIntent = new Intent(getApplicationContext(),
-            this.getClass());
+        Loo.e("" + ServiceInfo.FLAG_STOP_WITH_TASK + "");
+        Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
         restartServiceIntent.setPackage(getPackageName());
 
         PendingIntent restartServicePendingIntent = PendingIntent.getService(
             getApplicationContext(), 1, restartServiceIntent,
             PendingIntent.FLAG_ONE_SHOT);
+
         AlarmManager alarmService = (AlarmManager) getApplicationContext()
             .getSystemService(Context.ALARM_SERVICE);
+
         alarmService.set(AlarmManager.ELAPSED_REALTIME,
             SystemClock.elapsedRealtime() + 500,
             restartServicePendingIntent);
+
         super.onTaskRemoved(rootIntent);
     }
 

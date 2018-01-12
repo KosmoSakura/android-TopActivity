@@ -9,8 +9,8 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 
 import com.willme.topactivity.constant.Code;
-import com.willme.topactivity.receiver.NotificationActionReceiver;
-import com.willme.topactivity.receiver.WatchingAccessibilityService;
+import com.willme.topactivity.receiver.NotificationReceiver;
+import com.willme.topactivity.service.WatchingAccessibilityService;
 import com.willme.topactivity.tool.SPHelper;
 import com.willme.topactivity.tool.TasksWindow;
 
@@ -20,7 +20,6 @@ import com.willme.topactivity.tool.TasksWindow;
 
 @TargetApi(Build.VERSION_CODES.N)
 public class AppShortcutsActivity extends Activity {
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,10 +36,10 @@ public class AppShortcutsActivity extends Activity {
         SPHelper.setIsShowWindow(this, isShow);
         if (!isShow) {
             TasksWindow.getInstance(this).dismiss();
-            NotificationActionReceiver.showNotification(this, true);
+            NotificationReceiver.showNotification(this, true);
         } else {
             TasksWindow.getInstance(this).show(getPackageName() + "\n" + getClass().getName());
-            NotificationActionReceiver.showNotification(this, false);
+            NotificationReceiver.showNotification(this, false);
         }
         sendBroadcast(new Intent(Code.ConstantStr.ACTION_STATE_CHANGED));
         finish();

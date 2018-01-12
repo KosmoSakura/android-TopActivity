@@ -1,4 +1,4 @@
-package com.willme.topactivity.receiver;
+package com.willme.topactivity.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.accessibility.AccessibilityEvent;
 
 import com.willme.topactivity.constant.Code;
+import com.willme.topactivity.receiver.NotificationReceiver;
 import com.willme.topactivity.tool.SPHelper;
 import com.willme.topactivity.tool.TasksWindow;
 
@@ -35,7 +36,7 @@ public class WatchingAccessibilityService extends AccessibilityService {
     protected void onServiceConnected() {
         sInstance = this;
         if (SPHelper.isShowWindow(this)) {
-            NotificationActionReceiver.showNotification(this, false);
+            NotificationReceiver.showNotification(this, false);
         }
         sendBroadcast(new Intent(Code.ConstantStr.ACTION_UPDATE_TITLE));
         super.onServiceConnected();
@@ -45,7 +46,7 @@ public class WatchingAccessibilityService extends AccessibilityService {
     public boolean onUnbind(Intent intent) {
         sInstance = null;
         TasksWindow.getInstance(this).dismiss();
-        NotificationActionReceiver.cancelNotification(this);
+        NotificationReceiver.cancelNotification(this);
         sendBroadcast(new Intent(Code.ConstantStr.ACTION_UPDATE_TITLE));
         return super.onUnbind(intent);
     }

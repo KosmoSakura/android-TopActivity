@@ -21,6 +21,4 @@
 
     <string name="dialog_enable_overlay_window_msg">Android 7.1.1 以上, 请开启悬浮窗权限</string>
     <string name="dialog_enable_overlay_window_positive_btn">去设置</string>
-    <string name="off">关</string>
-    <string name="on">开</string>
 </resources>

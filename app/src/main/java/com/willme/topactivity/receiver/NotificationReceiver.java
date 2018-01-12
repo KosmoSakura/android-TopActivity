@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by Wen on 4/18/15.
  */
-public class NotificationActionReceiver extends BroadcastReceiver {
+public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         int command = intent.getIntExtra(Code.ConstantStr.EXTRA_NOTIFICATION_ACTION, -1);
@@ -44,11 +44,6 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 TasksWindow.getInstance(context).dismiss();
                 SPHelper.setIsShowWindow(context, false);
                 break;
-            case Code.ConstantInt.ACTION_STOP:
-                TasksWindow.getInstance(context).dismiss();
-                SPHelper.setIsShowWindow(context, false);
-//                cancelNotification(context);
-                break;
         }
         context.sendBroadcast(new Intent(Code.ConstantStr.ACTION_UPDATE_TITLE));
     }
@@ -68,12 +63,6 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         } else {
             builder.addAction(R.drawable.ic_noti_action_pause, context.getString(R.string.noti_action_pause), getPendingIntent(context, Code.ConstantInt.ACTION_PAUSE));
         }
-
-        builder.addAction(R.drawable.ic_noti_action_stop, context.getString(R.string.noti_action_stop),
-            getPendingIntent(context, Code.ConstantInt.ACTION_STOP))
-            .setContentIntent(pIntent);
-
-
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(Code.ConstantInt.NOTIFICATION_ID, builder.build());
         SPHelper.setNotification(context, true);

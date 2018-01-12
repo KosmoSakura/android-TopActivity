@@ -12,8 +12,7 @@ import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 
 import com.willme.topactivity.constant.Code;
-import com.willme.topactivity.receiver.NotificationActionReceiver;
-import com.willme.topactivity.receiver.WatchingAccessibilityService;
+import com.willme.topactivity.receiver.NotificationReceiver;
 import com.willme.topactivity.tool.SPHelper;
 import com.willme.topactivity.tool.TasksWindow;
 import com.willme.topactivity.view.MainActivity;
@@ -68,10 +67,10 @@ public class QuickSettingTileService extends TileService {
             SPHelper.setIsShowWindow(this, !SPHelper.isShowWindow(this));
             if (SPHelper.isShowWindow(this)) {
                 TasksWindow.getInstance(this).show("");
-                NotificationActionReceiver.showNotification(this, false);
+                NotificationReceiver.showNotification(this, false);
             } else {
                 TasksWindow.getInstance(this).dismiss();
-                NotificationActionReceiver.showNotification(this, true);
+                NotificationReceiver.showNotification(this, true);
             }
             sendBroadcast(new Intent(Code.ConstantStr.ACTION_STATE_CHANGED));
         }

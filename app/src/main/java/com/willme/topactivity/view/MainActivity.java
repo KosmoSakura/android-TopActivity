@@ -10,19 +10,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import com.willme.topactivity.R;
 import com.willme.topactivity.constant.Code;
-import com.willme.topactivity.receiver.NotificationActionReceiver;
-import com.willme.topactivity.receiver.WatchingService;
+import com.willme.topactivity.receiver.NotificationReceiver;
+import com.willme.topactivity.service.WatchingService;
 import com.willme.topactivity.tool.SPHelper;
 import com.willme.topactivity.tool.TasksWindow;
-import com.willme.topactivity.widget.FloatView;
 
 public class MainActivity extends Activity implements OnCheckedChangeListener {
     private CompoundButton mWindowSwitch, mNotificationSwitch;
@@ -39,14 +36,15 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
         mWindowSwitch.setOnCheckedChangeListener(this);
 
         if (getResources().getBoolean(R.bool.use_watching_service)) {
-            TasksWindow.getInstance(this).show("");
-            startService(new Intent(this, WatchingService.class));
         }
+        TasksWindow.getInstance(this).show("");
+        startService(new Intent(this, WatchingService.class));
 
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 refreshWindowSwitch();
+                refreshNotificationSwitch();
             }
         };
         IntentFilter filter = new IntentFilter();
@@ -96,9 +94,9 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
                 break;
             case R.id.sw_notification://快速设置开关启用时关闭通知开关
                 if (isChecked) {
-                    NotificationActionReceiver.showNotification(this, false);
+                    NotificationReceiver.showNotification(this, false);
                 } else {
-                    NotificationActionReceiver.cancelNotification(this);
+                    NotificationReceiver.cancelNotification(this);
                 }
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -122,27 +120,6 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    /**
-     * 显示悬浮窗
-     */
-    private void showFloatView() {
-        FloatView.setOnClickListener(new FloatView.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e("399", "点击了");
-            }
-        });
-        FloatView.showFloatView(this, R.layout.window_float);
-        TasksWindow.getInstance(this).show(getPackageName() + "\n" + getClass().getName());
-    }
-
-    /**
-     * 隐藏悬浮窗
-     */
-    public void hideFloatView() {
-        FloatView.hideFloatView(this);
     }
 
     @Override

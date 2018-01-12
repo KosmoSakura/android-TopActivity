@@ -37,11 +37,9 @@
             android:exported="false"
             android:theme="@style/TransparentTheme"/>
 
+        <service android:name=".service.WatchingService"/>
         <service
-            android:name=".receiver.WatchingService"
-            android:enabled="@bool/use_watching_service"/>
-        <service
-            android:name=".receiver.WatchingAccessibilityService"
+            android:name=".service.WatchingAccessibilityService"
             android:description="@string/app_name"
             android:enabled="@bool/use_accessibility_service"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
@@ -68,13 +66,12 @@
                 android:value="true"/>
         </service>
 
-        <receiver android:name=".receiver.NotificationActionReceiver">
+        <receiver android:name=".receiver.NotificationReceiver">
             <intent-filter>
                 <action android:name="com.willme.topactivity.ACTION_NOTIFICATION_RECEIVER"/>
             </intent-filter>
         </receiver>
 
-        <activity android:name=".view.PermissionsActivity"></activity>
     </application>
 
 </manifest>

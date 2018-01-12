@@ -27,6 +27,5 @@ public interface Code {
         int NOTIFICATION_ID = 1;
         int ACTION_PAUSE = 0;
         int ACTION_RESUME = 1;
-        int ACTION_STOP = 2;
     }
 }

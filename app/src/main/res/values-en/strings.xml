@@ -5,7 +5,6 @@
 
     <string name="shortcut_action">Toggle monitor</string>
 
-    <string name="log" translatable="false">Log</string>
     <string name="show_window">Show floating window</string>
     <string name="show_drag_window">显示可拖拽悬浮窗</string>
     <string name="use_toggle_notification">Disable notification toggle while quick setting tile enabled</string>

@@ -70,7 +70,8 @@ public class TasksWindow {
     }
 
 
-    public void show(final String str) {
+    public void show(String... text) {
+
         if (Build.VERSION.SDK_INT >= 23 && !Settings.canDrawOverlays(context)) {
             new AlertDialog.Builder(context)
                 .setMessage(R.string.dialog_enable_overlay_window_msg)
@@ -108,10 +109,30 @@ public class TasksWindow {
         }
 
 
-        mWindowManager.addView(mView, wmParams);
+        try {
+            mWindowManager.addView(mView, wmParams);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         SPHelper.setIsShowWindow(context, true);
 
-        tSHow.setText(str);
+        if (text != null) {
+            if (text.length < 2) {
+                Loo.d("Show:" + text[0]);
+                tSHow.setText(text[0]);
+            } else {
+                // com.willme.topactivity.view.MainActivity
+                String str = text[1];
+                String[] arr = str.split("\\.");
+                Loo.d("-->" + arr.length + "--" + str);
+                if (arr.length > 0) {
+                    str = arr[arr.length-1];
+                }
+
+                tSHow.setText("包名：" + text[0] + "\n类名：" + str);
+            }
+        }
+
         isShow = true;
 
         mView.setOnTouchListener(new View.OnTouchListener() {
